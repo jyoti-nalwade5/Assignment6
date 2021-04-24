@@ -1,5 +1,6 @@
 /* eslint linebreak-style: ["error", "windows"] */
 import React from 'react';
+import { Panel } from 'react-bootstrap';
 
 import ProductTable from './ProductTable.jsx';
 import ProductAdd from './ProductAdd.jsx';
@@ -72,9 +73,14 @@ export default class ProductList extends React.Component {
           deleteProduct={this.deleteProduct}
         />
         <br />
-        <p>Add a new product to inventory</p>
-        <hr />
-        <ProductAdd createProduct={this.createProduct} />
+        <Panel>
+          <Panel.Heading>
+            <Panel.Title toggle>Add a new product to inventory</Panel.Title>
+          </Panel.Heading>
+          <Panel.Body collapsible>
+          <ProductAdd createProduct={this.createProduct} />
+          </Panel.Body>
+          </Panel>
       </React.Fragment>
     );
   }
