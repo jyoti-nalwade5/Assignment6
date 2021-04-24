@@ -1,6 +1,6 @@
 /* eslint linebreak-style: ["error", "windows"] */
 import React from 'react';
-import { Label } from 'react-bootstrap';
+
 import ProductTable from './ProductTable.jsx';
 import ProductAdd from './ProductAdd.jsx';
 import graphQLFetch from './graphQLFetch.js';
@@ -64,7 +64,7 @@ export default class ProductList extends React.Component {
     const { products } = this.state;
     return (
       <React.Fragment>
-        <h1><Label>My Company Inventory</Label></h1>
+        
         <p>Showing all available products</p>
         <hr />
         <ProductTable
