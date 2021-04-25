@@ -65,9 +65,7 @@ export default class ProductList extends React.Component {
     const { products } = this.state;
     return (
       <React.Fragment>
-        
         <p>Showing all available products</p>
-        <hr />
         <ProductTable
           products={products}
           deleteProduct={this.deleteProduct}
@@ -78,9 +76,9 @@ export default class ProductList extends React.Component {
             <Panel.Title toggle>Add a new product to inventory</Panel.Title>
           </Panel.Heading>
           <Panel.Body collapsible>
-          <ProductAdd createProduct={this.createProduct} />
+            <ProductAdd createProduct={this.createProduct} />
           </Panel.Body>
-          </Panel>
+        </Panel>
       </React.Fragment>
     );
   }

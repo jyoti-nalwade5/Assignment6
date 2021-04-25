@@ -1,8 +1,9 @@
 /* eslint linebreak-style: ["error", "windows"] */
 import React from 'react';
 import { Link, withRouter } from 'react-router-dom';
+import { LinkContainer } from 'react-router-bootstrap';
 import {
-  Button, Glyphicon, Tooltip, OverlayTrigger,
+  Button, Glyphicon, Tooltip, OverlayTrigger, Table
 } from 'react-bootstrap';
 
 const ProductRow = withRouter(({ product, deleteProduct, index }) => {
@@ -13,7 +14,13 @@ const ProductRow = withRouter(({ product, deleteProduct, index }) => {
   const deleteTooltip = (
     <Tooltip id="delete-tooltip" placement="top">Delete Product</Tooltip>
   );
-  return(
+
+  function onDelete(e) {
+    e.preventDefault();
+    deleteProduct(index);
+  }
+
+  const tableRow = (
   <tr>
     <td>{product.name}</td>
     <td>
@@ -23,23 +30,24 @@ const ProductRow = withRouter(({ product, deleteProduct, index }) => {
     <td>{product.category}</td>
     <td><Link to={`/view/${encodeURIComponent(product.imageUrl)}`}>ViewImage</Link></td>
     <td>
-      <Link to={`/edit/${product.id}`}>
+      <LinkContainer to={`/edit/${product.id}`}>
         <OverlayTrigger delayShow={1000} overlay={editTooltip}>
           <Button bsSize="xsmall">
             <Glyphicon glyph="pencil" />
           </Button>
         </OverlayTrigger>
-      </Link>
+      </LinkContainer>
     </td>
     <td>
     <OverlayTrigger delayShow={1000} overlay={deleteTooltip}>
-      <Button bsSize="xsmall" type="button" onClick={() => { deleteProduct(index); }}>
+      <Button bsSize="xsmall" onClick={onDelete}>
         <Glyphicon style={{color:'red'}} glyph="trash" />
       </Button>
     </OverlayTrigger>
     </td>
   </tr>
   );
+  return tableRow;
 });
 
 export default function ProductTable({ products, deleteProduct }) {
@@ -53,7 +61,7 @@ export default function ProductTable({ products, deleteProduct }) {
   ));
 
   return (
-    <table className="bordered-table">
+    <Table bordered condensed hover responsive>
       <thead>
         <tr>
           <th>Product Name</th>
@@ -67,6 +75,6 @@ export default function ProductTable({ products, deleteProduct }) {
       <tbody>
         {productRows}
       </tbody>
-    </table>
+    </Table>
   );
 }
