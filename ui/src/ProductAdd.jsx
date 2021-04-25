@@ -1,6 +1,8 @@
 /* eslint linebreak-style: ["error", "windows"] */
 import React from 'react';
-import { Button } from 'react-bootstrap';
+import {
+  Button, FormGroup, FormControl, ControlLabel
+} from 'react-bootstrap';
 
 export default class ProductAdd extends React.Component {
   constructor() {
@@ -29,39 +31,35 @@ export default class ProductAdd extends React.Component {
   render() {
     return (
       <form name="productAdd" onSubmit={this.handleSubmit}>
-        <div className="formContainer">
-          <div className="formCol">
-            Category:
-            <br />
-            <select id="menu" name="category">
+      <div>
+        <FormGroup>
+          <ControlLabel>Category:</ControlLabel>
+            <FormControl
+            componentClass="select"
+            name="category"
+            autoFocus
+            >
               <option value="Shirts">Shirts</option>
               <option value="Jeans">Jeans</option>
               <option value="Jackets">Jackets</option>
               <option value="Sweaters">Sweaters</option>
               <option value="Accessories">Accessories</option>
-            </select>
-            <br />
-            <br />
-            Product Name:
-            <br />
-            <input type="text" name="productName" />
-            <br />
-          </div>
-                &nbsp;&nbsp;
-          <div className="formCol">
-            Price Per Unit:
-            <br />
-            <input type="text" name="pricePerUnit" defaultValue="$" />
-            <br />
-            <br />
-            Image URL:
-            <br />
-            <input type="text" name="imageUrl" />
-            <br />
-          </div>
-        </div>
-        <br />
-        <Button bsStyle="primary" type="submit">Add Product</Button>
+            </FormControl>
+        </FormGroup>
+        <FormGroup>
+            <ControlLabel>Product Name</ControlLabel>
+              <FormControl name="productName" />
+        </FormGroup>
+        <FormGroup>
+            <ControlLabel>Price Per Unit (in USD)</ControlLabel>
+            <FormControl name="pricePerUnit" type="text" defaultValue="$"/>
+        </FormGroup>
+        <FormGroup>
+            <ControlLabel>Image URL</ControlLabel>
+            <FormControl name="imageUrl" />
+        </FormGroup>
+        <Button bsStyle="primary" type="submit">Add Product</Button> 
+      </div>
       </form>
     );
   }
