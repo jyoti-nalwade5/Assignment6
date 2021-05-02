@@ -1,7 +1,7 @@
 /* eslint linebreak-style: ["error", "windows"] */
 import React from 'react';
 import {
-  Button, FormGroup, FormControl, ControlLabel
+  Button, FormGroup, FormControl, ControlLabel, Form, Row, Col, ButtonToolbar
 } from 'react-bootstrap';
 
 export default class ProductAdd extends React.Component {
@@ -30,10 +30,11 @@ export default class ProductAdd extends React.Component {
 
   render() {
     return (
-      <form name="productAdd" onSubmit={this.handleSubmit}>
-      <div>
+      <Form name="productAdd" >
+        <Row>
+        <Col xs={6} sm={4} md={3} lg={6}>
         <FormGroup>
-          <ControlLabel>Category:</ControlLabel>
+          <ControlLabel>Category</ControlLabel>
             <FormControl
             componentClass="select"
             name="category"
@@ -46,21 +47,40 @@ export default class ProductAdd extends React.Component {
               <option value="Accessories">Accessories</option>
             </FormControl>
         </FormGroup>
+        </Col>
+        <Col xs={6} sm={4} md={3} lg={6}>
         <FormGroup>
             <ControlLabel>Product Name</ControlLabel>
               <FormControl name="productName" />
         </FormGroup>
+        </Col>
+        </Row>
+        <Row>
+        <Col xs={6} sm={4} md={3} lg={6}> 
         <FormGroup>
             <ControlLabel>Price Per Unit (in USD)</ControlLabel>
             <FormControl name="pricePerUnit" type="text" defaultValue="$"/>
         </FormGroup>
+        </Col>
+        <Col xs={6} sm={4} md={3} lg={6}>
         <FormGroup>
             <ControlLabel>Image URL</ControlLabel>
             <FormControl name="imageUrl" />
         </FormGroup>
-        <Button bsStyle="primary" type="submit">Add Product</Button> 
-      </div>
-      </form>
+        </Col>
+        </Row>
+        <Row>
+        <Col xs={6} sm={4} md={3} lg={5}></Col>
+        <Col xs={6} sm={4} md={3} lg={5}>
+        <FormGroup>
+          <ControlLabel>&nbsp;</ControlLabel>
+            <ButtonToolbar>
+              <Button bsStyle="primary" type="submit" onClick={this.handleSubmit}>Add Product</Button> 
+            </ButtonToolbar>
+        </FormGroup>
+        </Col>
+        </Row>
+      </Form>
     );
   }
 }

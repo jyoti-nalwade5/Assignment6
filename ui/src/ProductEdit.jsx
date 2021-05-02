@@ -1,9 +1,15 @@
 /* eslint linebreak-style: ["error", "windows"] */
 import React from 'react';
 import { Link } from 'react-router-dom';
+import { LinkContainer } from 'react-router-bootstrap';
+import {
+  Col, Panel, Form, FormGroup, FormControl, ControlLabel,
+  ButtonToolbar, Button,
+} from 'react-bootstrap';
+
+import Toast from './Toast.jsx';
 import NumInput from './NumInput.jsx';
 import TextInput from './TextInput.jsx';
-
 import graphQLFetch from './graphQLFetch.js';
 
 export default class ProductEdit extends React.Component {
@@ -11,9 +17,16 @@ export default class ProductEdit extends React.Component {
     super();
     this.state = {
       product: {},
+      toastVisible: false,
+      toastMessage: '',
+      toastType: 'info',
     };
+
     this.onChange = this.onChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
+    this.showSuccess = this.showSuccess.bind(this);
+    this.showError = this.showError.bind(this);
+    this.dismissToast = this.dismissToast.bind(this);
   }
 
   componentDidMount() {
@@ -55,10 +68,10 @@ export default class ProductEdit extends React.Component {
     }
     }`;
     const { id, created, ...changes } = product;
-    const data = await graphQLFetch(query, { changes, id });
+    const data = await graphQLFetch(query, { changes, id }, this.showError);
     if (data) {
       this.setState({ product: data.updateProduct });
-      alert('Updated Product Successfully'); // eslint-disable-line no-alert
+      this.showSuccess('Updated Product successfully');
     }
   }
 
@@ -70,8 +83,24 @@ export default class ProductEdit extends React.Component {
       }
     }`;
     const { match: { params: { id } } } = this.props;
-    const data = await graphQLFetch(query, { id });
+    const data = await graphQLFetch(query, { id }, this.showError);
     this.setState({ product: data.product });
+  }
+
+  showSuccess(message) {
+    this.setState({
+      toastVisible: true, toastMessage: message, toastType: 'success',
+    });
+  }
+
+  showError(message) {
+    this.setState({
+      toastVisible: true, toastMessage: message, toastType: 'danger',
+    });
+  }
+
+  dismissToast() {
+    this.setState({ toastVisible: false });
   }
 
   render() {
@@ -89,67 +118,92 @@ export default class ProductEdit extends React.Component {
         name, pricePerUnit, category, imageUrl,
       },
     } = this.state;
-
+    const { toastVisible, toastMessage, toastType } = this.state;
     return (
-      <form onSubmit={this.handleSubmit}>
-        <h3>{`Editing product: ${id}`}</h3>
-        <table>
-          <tbody>
-            <tr>
-              <td>Product Name:</td>
-              <td>
-                <TextInput
+      <Panel>
+        <Panel.Heading>
+          <Panel.Title>{`Editing product: ${id}`}</Panel.Title>
+        </Panel.Heading>
+        <Panel.Body>
+        <Form horizontal onSubmit={this.handleSubmit}>
+          <FormGroup>
+              <Col componentClass={ControlLabel} sm={3}>Product Name:</Col>
+              <Col sm={9}>
+                <FormControl
+                  componentClass={TextInput}
                   name="name"
                   value={name}
                   onChange={this.onChange}
                   key={id}
                 />
-              </td>
-            </tr>
-            <tr>
-              <td>Category:</td>
-              <td>
-                <select name="category" value={category} onChange={this.onChange}>
-                  <option value="Shirts">Shirts</option>
-                  <option value="Jeans">Jeans</option>
-                  <option value="Jackets">Jackets</option>
-                  <option value="Sweaters">Sweaters</option>
-                  <option value="Accessories">Accessories</option>
-                </select>
-              </td>
-            </tr>
-            <tr>
-              <td>Price Per Unit:</td>
-              <td>
-                <NumInput
-                  name="pricePerUnit"
-                  value={pricePerUnit}
-                  onChange={this.onChange}
-                  key={id}
+                </Col>
+          </FormGroup>
+          <FormGroup>
+            <Col componentClass={ControlLabel} sm={3}>Category:</Col>
+            <Col sm={9}>
+              <FormControl
+                componentClass="select"
+                name="category" 
+                value={category} 
+                onChange={this.onChange}
+              >
+                <option value="Shirts">Shirts</option>
+                <option value="Jeans">Jeans</option>
+                <option value="Jackets">Jackets</option>
+                <option value="Sweaters">Sweaters</option>
+                <option value="Accessories">Accessories</option>
+              </FormControl>
+            </Col>
+          </FormGroup>
+          <FormGroup>
+            <Col componentClass={ControlLabel} sm={3}>Price Per Unit:</Col>
+            <Col sm={9}>
+              <FormControl
+                componentClass={NumInput}
+                name="pricePerUnit"
+                value={pricePerUnit}
+                onChange={this.onChange}
+                key={id}
                 />
-              </td>
-            </tr>
-            <tr>
-              <td>Image:</td>
-              <td>
-                <TextInput
-                  name="imageUrl"
-                  value={imageUrl}
-                  onChange={this.onChange}
-                  key={id}
-                />
-              </td>
-            </tr>
-            <tr>
-              <td />
-              <td><button type="submit">Submit</button></td>
-            </tr>
-          </tbody>
-        </table>
-        <Link to={`/edit/${id - 1}`}>Prev</Link>
-        {' | '}
-        <Link to={`/edit/${id + 1}`}>Next</Link>
-      </form>
+            </Col>
+          </FormGroup>
+          <FormGroup>
+            <Col componentClass={ControlLabel} sm={3}>Image:</Col>
+            <Col sm={9}>
+              <FormControl
+                componentClass={TextInput}
+                name="imageUrl"
+                value={imageUrl}
+                onChange={this.onChange}
+                key={id}
+              />
+            </Col>
+          </FormGroup>
+          <FormGroup>
+            <Col smOffset={3} sm={6}>
+              <ButtonToolbar>
+                <Button bsStyle="primary" type="submit">Submit</Button>
+                <LinkContainer to="/products">
+                    <Button bsStyle="link">Back</Button>
+                </LinkContainer>
+              </ButtonToolbar>
+            </Col>
+          </FormGroup>
+        </Form>
+        </Panel.Body>
+        <Panel.Footer>
+          <Link to={`/edit/${id - 1}`}>Prev</Link>
+          {' | '}
+          <Link to={`/edit/${id + 1}`}>Next</Link>
+        </Panel.Footer>
+        <Toast
+          showing={toastVisible}
+          onDismiss={this.dismissToast}
+          bsStyle={toastType}
+        >
+          {toastMessage}
+        </Toast>
+      </Panel>
     );
   }
 }
