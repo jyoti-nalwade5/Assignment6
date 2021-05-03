@@ -1,10 +1,9 @@
 /* eslint linebreak-style: ["error", "windows"] */
 import React from 'react';
-import { Panel } from 'react-bootstrap';
+
 
 import Toast from './Toast.jsx';
 import ProductTable from './ProductTable.jsx';
-import ProductAdd from './ProductAdd.jsx';
 import graphQLFetch from './graphQLFetch.js';
 
 
@@ -17,7 +16,6 @@ export default class ProductList extends React.Component {
       toastMessage: '',
       toastType: 'info',
    };
-    this.createProduct = this.createProduct.bind(this);
     this.deleteProduct = this.deleteProduct.bind(this);
     this.showSuccess = this.showSuccess.bind(this);
     this.showError = this.showError.bind(this);
@@ -42,20 +40,6 @@ export default class ProductList extends React.Component {
     const data = await graphQLFetch(query, this.showError);
     if (data) {
       this.setState({ products: data.productList });
-    }
-  }
-
-  async createProduct(product) {
-    const query = `mutation addProduct($product: ProductInputs!) {
-              addProduct(product: $product) {
-                  id
-              }
-            }`;
-
-    const data = await graphQLFetch(query, { product },this.showError);
-    if (data) {
-      this.showSuccess(`Product added successfully.`);
-      this.loadData();
     }
   }
 
@@ -98,14 +82,6 @@ export default class ProductList extends React.Component {
           deleteProduct={this.deleteProduct}
         />
         <br />
-        <Panel>
-          <Panel.Heading>
-            <Panel.Title toggle>Add a new product to inventory</Panel.Title>
-          </Panel.Heading>
-          <Panel.Body collapsible>
-            <ProductAdd createProduct={this.createProduct} />
-          </Panel.Body>
-        </Panel>
         <Toast
           showing={toastVisible}
           onDismiss={this.dismissToast}
